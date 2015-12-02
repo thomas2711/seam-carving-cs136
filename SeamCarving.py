@@ -1,4 +1,4 @@
-import matplotlib.image
+import matplotlib.image as mpli
 
 class SeamCarver:
     # an RGB 2d array
@@ -8,8 +8,9 @@ class SeamCarver:
     
     
     def __init__(self, imagePath):
-        # TODO: imsave method
-        matplotlib.image.imsave(imagePath, self.m_data)
+        self. m_data = mpli.imread(imagePath)
+        self.row = len(m_data)
+        self.col = len(m_data[0])
 
     # returns energy of specified pixel
     def energy(x, y):
