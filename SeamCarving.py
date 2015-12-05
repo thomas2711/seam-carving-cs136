@@ -103,7 +103,21 @@ class SeamCarver:
             min = x + 1
 
         return min
+    
+    def markVerticalSeam():
+        seam = verticalSeam()
+        for i in range (0, self.height):
+            self.m_data[seam[i]][i][0] = 255
+            self.m_data[seam[i]][i][1] = 0
+            self.m_data[seam[i]][i][2] = 0
 
+    def markVerticalSeam():
+        seam = horizontalSeam()
+        for i in range (0, self.width):
+            self.m_data[i][seam[i]][0] = 255
+            self.m_data[i][seam[i]][1] = 0
+            self.m_data[i][seam[i]][2] = 0
+    
     # seam is a 2D array
     def removeVertical(seam):
         # TODO
