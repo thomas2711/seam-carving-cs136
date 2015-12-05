@@ -9,33 +9,33 @@ class SeamCarver:
     
     def __init__(self, imagePath):
         self. m_data = mpli.imread(imagePath)
-        self.row = len(self.m_data)
-        self.col = len(self.m_data[0])
+        self.row = len(m_data)
+        self.col = len(m_data[0])
 
     # returns energy of specified pixel
-    def energy(self, x, y):
+    def energy(x, y):
         # TODO: edge cases
-        return self._gradientSquareX(x, y)**2 + self._gradientSquareY(x, y)**2
+        return _gradientSquareX(x, y)**2 + _gradientSquareY(x, y)**2
         
-    def _gradientSquareX(self, x, y):
+    def _gradientSqaureX(x, y):
         # Rx(x, y), Gx(x, y), and Bx(x, y) are the absolute value in differences
         # of red, green, and blue components between pixel (x + 1, y) and pixel (x − 1, y)
 
         # TODO: edge cases
-        Rx = int(self.m_data[x + 1][y][0]) - int(self.m_data[x - 1][y][0])
-        Gx = int(self.m_data[x + 1][y][1]) - int(self.m_data[x - 1][y][1])
-        Bx = int(self.m_data[x + 1][y][2]) - int(self.m_data[x - 1][y][2])
+        Rx = m_data[x + 1][y][0] - m_data[x - 1][y][0]
+        Gx = m_data[x + 1][y][1] - m_data[x - 1][y][1]
+        Bx = m_data[x + 1][y][2] - m_data[x - 1][y][2]
 
         return Rx**2 + Gx**2 + Bx**2
     
-    def _gradientSquareY(self, x, y):
+    def _gradientSqaureY(x, y):
         # Ry(x, y), Gy(x, y), and By(x, y) are the absolute value in differences
         # of red, green, and blue components between pixel (x, y + 1) and pixel (x, y - 1)
 
         # TODO: edge cases
-        Ry = int(self.m_data[x][y + 1][0]) - int(self.m_data[x][y - 1][0])
-        Gy = int(self.m_data[x][y + 1][1]) - int(self.m_data[x][y - 1][1])
-        By = int(self.m_data[x][y + 1][2]) - int(self.m_data[x][y - 1][2])
+        Ry = m_data[x][y + 1][0] - m_data[x][y - 1][0]
+        Gy = m_data[x][y + 1][1] - m_data[x][y - 1][1]
+        By = m_data[x][y + 1][2] - m_data[x][y - 1][2]
 
         return Ry**2 + Gy**2 + By**2
 
@@ -104,6 +104,7 @@ class SeamCarver:
 
         return min
 
+
     # seam is a 2D array
     def removeVertical(seam):
         # TODO
@@ -115,9 +116,3 @@ class SeamCarver:
     # removes seams corresponding to the difference in dimensions
     def scaleDown(newLength, newWidth):
         # TODO
-
-
-s = SeamCarver("images/example_1.jpg")
-#print("2, 2: " + s.m_data[2][2])
-e_test = s.energy(2,2)
-print(e_test)
