@@ -85,7 +85,7 @@ class SeamCarver:
                 min = i
         vertical.append(min)
         for i in range (0, self.row - 1):
-            vertical.append(_findVertiIndex(min, i))
+            vertical.append(self._findVertiIndex(min, i))
 
         return vertical
     
@@ -133,7 +133,7 @@ class SeamCarver:
 
 s = SeamCarver("images/example_1.jpg")
 #print("2, 2: " + s.m_data[2][2])
-e_test = s.energy(1,1)
-print(e_test)
-#s.markVerticalSeam()
-#mpli.imsave("test.jpg", s.m_data)
+#e_test = s.energy(1,1)
+#print(e_test)
+s.markVerticalSeam()
+mpli.imsave("test.jpg", s.m_data)
