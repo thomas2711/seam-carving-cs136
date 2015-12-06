@@ -133,8 +133,10 @@ class SeamCarver:
 
 
 s = SeamCarver("images/example_1.jpg")
-#print("2, 2: " + s.m_data[2][2])
-#e_test = s.energy(0,1)
+#print("2, 2: " + s.m_data[2][2])#e_test = s.energy(0,1)
+=======
+#e_test = s.energy(1,1)
+>>>>>>> origin/master
 #print(e_test)
 s.markVerticalSeam()
 mpli.imsave("test.jpg", s.m_data)
