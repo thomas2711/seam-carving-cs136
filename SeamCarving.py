@@ -8,24 +8,25 @@ class SeamCarver:
     
     
     def __init__(self, imagePath):
-        self. m_data = mpli.imread(imagePath)
+        self.m_data = mpli.imread(imagePath)
         self.row = len(self.m_data)
         self.col = len(self.m_data[0])
+
 
     # returns energy of specified pixel
     def energy(self, x, y):
         # TODO: edge cases
-        return self._gradientSquareX(x, y)**2 + self._gradientSquareY(x, y)**2
+        return self._gradientSquareX(x, y) + self._gradientSquareY(x, y)
         
     def _gradientSquareX(self, x, y):
         # Rx(x, y), Gx(x, y), and Bx(x, y) are the absolute value in differences
         # of red, green, and blue components between pixel (x + 1, y) and pixel (x − 1, y)
 
         # TODO: edge cases
-        Rx = int(self.m_data[x + 1][y][0]) - int(self.m_data[x - 1][y][0])
-        Gx = int(self.m_data[x + 1][y][1]) - int(self.m_data[x - 1][y][1])
-        Bx = int(self.m_data[x + 1][y][2]) - int(self.m_data[x - 1][y][2])
-
+        Rx = int(self.m_data[y][(x + 1) % self.col][0]) - int(self.m_data[y][x - 1][0])
+        Gx = int(self.m_data[y][(x + 1) % self.col][1]) - int(self.m_data[y][x - 1][1])
+        Bx = int(self.m_data[y][(x + 1) % self.col][2]) - int(self.m_data[y][x - 1][2])
+        
         return Rx**2 + Gx**2 + Bx**2
     
     def _gradientSquareY(self, x, y):
@@ -33,9 +34,9 @@ class SeamCarver:
         # of red, green, and blue components between pixel (x, y + 1) and pixel (x, y - 1)
 
         # TODO: edge cases
-        Ry = int(self.m_data[x][y + 1][0]) - int(self.m_data[x][y - 1][0])
-        Gy = int(self.m_data[x][y + 1][1]) - int(self.m_data[x][y - 1][1])
-        By = int(self.m_data[x][y + 1][2]) - int(self.m_data[x][y - 1][2])
+        Ry = int(self.m_data[(y + 1) % self.row][x][0]) - int(self.m_data[y - 1][x][0])
+        Gy = int(self.m_data[(y + 1) % self.row][x][1]) - int(self.m_data[y - 1][x][1])
+        By = int(self.m_data[(y + 1) % self.row][x][2]) - int(self.m_data[y - 1][x][2])
 
         return Ry**2 + Gy**2 + By**2
 
@@ -85,7 +86,7 @@ class SeamCarver:
                 min = i
         vertical.append(min)
         for i in range (0, self.row - 1):
-            vertical.append(_findVertiIndex(min, i))
+            vertical.append(self._findVertiIndex(min, i))
 
         return vertical
     
@@ -133,7 +134,7 @@ class SeamCarver:
 
 s = SeamCarver("images/example_1.jpg")
 #print("2, 2: " + s.m_data[2][2])
-e_test = s.energy(1,1)
-print(e_test)
-#s.markVerticalSeam()
-#mpli.imsave("test.jpg", s.m_data)
+#e_test = s.energy(0,1)
+#print(e_test)
+s.markVerticalSeam()
+mpli.imsave("test.jpg", s.m_data)
