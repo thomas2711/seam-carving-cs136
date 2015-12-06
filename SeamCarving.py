@@ -41,27 +41,27 @@ class SeamCarver:
 
     
     # returns an array of row indices for a horizontal seam
-    def horizontalSeam():
+    def horizontalSeam(self):
         # TODO
-        horizontal = {}
+        horizontal = []
         min = 0
-        minEnergy = energy(0, 0)
-        for i in range (1, self.height):
-            temp = energy(0, i)
+        minEnergy = self.energy(0, 0)
+        for i in range (1, self.row):
+            temp = self.energy(0, i)
             if minEnergy > temp:
                 minEnergy = temp
                 min = i
         horizontal.append(min)
-        for i in range (0, self.width - 1):
-            horizontal.append(_findHoriIndex(i, min))
+        for i in range (0, self.col - 1):
+            horizontal.append(self._findHoriIndex(i, min))
 
         return horizontal
 
     
-    def _findHoriIndex(x, y):
-        e1 = energy(x + 1, y - 1)
-        e2 = energy(x + 1, y)
-        e3 = energy(x + 1, y + 1)
+    def _findHoriIndex(self, x, y):
+        e1 = self.energy(x + 1, y - 1)
+        e2 = self.energy(x + 1, y)
+        e3 = self.energy(x + 1, y + 1)
         min = y - 1
         minEnergy = e1
         if minEnergy > e2:
@@ -73,26 +73,26 @@ class SeamCarver:
         return min
 
     # returns an array of column indices for a vertical seam
-    def verticalSeam():
+    def verticalSeam(self):
         # TODO
-        vertical = {}
+        vertical = []
         min = 0
-        minEnergy = energy(0, 0)
-        for i in range (1, self.width):
-            temp = energy(i, 0)
+        minEnergy = self.energy(0, 0)
+        for i in range (1, self.col):
+            temp = self.energy(i, 0)
             if minEnergy > temp:
                 minEnergy = temp
                 min = i
         vertical.append(min)
-        for i in range (0, self.height - 1):
+        for i in range (0, self.row - 1):
             vertical.append(_findVertiIndex(min, i))
 
         return vertical
     
-    def _findVertiIndex(x, y):
-        e1 = energy(x - 1, y + 1)
-        e2 = energy(x, y + 1)
-        e3 = energy(x + 1, y + 1)
+    def _findVertiIndex(self, x, y):
+        e1 = self.energy(x - 1, y + 1)
+        e2 = self.energy(x, y + 1)
+        e3 = self.energy(x + 1, y + 1)
         min = x - 1
         minEnergy = e1
 
@@ -104,34 +104,36 @@ class SeamCarver:
 
         return min
     
-    def markVerticalSeam():
-        seam = verticalSeam()
-        for i in range (0, self.height):
+    def markVerticalSeam(self):
+        seam = self.verticalSeam()
+        for i in range (0, self.row):
             self.m_data[seam[i]][i][0] = 255
             self.m_data[seam[i]][i][1] = 0
             self.m_data[seam[i]][i][2] = 0
 
-    def markVerticalSeam():
-        seam = horizontalSeam()
-        for i in range (0, self.width):
+    def markHorizontalSeam(self):
+        seam = self.horizontalSeam()
+        for i in range (0, self.col):
             self.m_data[i][seam[i]][0] = 255
             self.m_data[i][seam[i]][1] = 0
             self.m_data[i][seam[i]][2] = 0
     
-    # seam is a 2D array
-    def removeVertical(seam):
-        # TODO
-        
-    # seam is a 2D array
-    def removeHorizontal(seam):
-        # TODO
-
-    # removes seams corresponding to the difference in dimensions
-    def scaleDown(newLength, newWidth):
-        # TODO
+#    # seam is a 2D array
+#    def removeVertical(self, seam):
+#        # TODO
+#        
+#    # seam is a 2D array
+#    def removeHorizontal(self, seam):
+#        # TODO
+#
+#    # removes seams corresponding to the difference in dimensions
+#    def scaleDown(self, newLength, newWidth):
+#        # TODO
 
 
 s = SeamCarver("images/example_1.jpg")
 #print("2, 2: " + s.m_data[2][2])
-e_test = s.energy(2,2)
+e_test = s.energy(1,1)
 print(e_test)
+#s.markVerticalSeam()
+#mpli.imsave("test.jpg", s.m_data)
