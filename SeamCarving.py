@@ -108,16 +108,16 @@ class SeamCarver:
     def markVerticalSeam(self):
         seam = self.verticalSeam()
         for i in range (0, self.row):
-            self.m_data[seam[i]][i][0] = 255
-            self.m_data[seam[i]][i][1] = 0
-            self.m_data[seam[i]][i][2] = 0
+            self.m_data[i][seam[i]][0] = 255
+            self.m_data[i][seam[i]][1] = 0
+            self.m_data[i][seam[i]][2] = 0
 
     def markHorizontalSeam(self):
         seam = self.horizontalSeam()
         for i in range (0, self.col):
-            self.m_data[i][seam[i]][0] = 255
-            self.m_data[i][seam[i]][1] = 0
-            self.m_data[i][seam[i]][2] = 0
+            self.m_data[seam[i]][i][0] = 255
+            self.m_data[seam[i]][i][1] = 0
+            self.m_data[seam[i]][i][2] = 0
     
 #    # seam is a 2D array
 #    def removeVertical(self, seam):
@@ -134,9 +134,7 @@ class SeamCarver:
 
 s = SeamCarver("images/example_1.jpg")
 #print("2, 2: " + s.m_data[2][2])#e_test = s.energy(0,1)
-=======
 #e_test = s.energy(1,1)
->>>>>>> origin/master
 #print(e_test)
 s.markVerticalSeam()
 mpli.imsave("test.jpg", s.m_data)
