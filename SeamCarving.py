@@ -2,12 +2,11 @@ import matplotlib.image as mpli
 import math
 import numpy as np
 
-
 class SeamCarver:
     # an RGB 2d array
     m_data = None
-    row = 0
-    col = 0
+    row = 0 #y
+    col = 0 #x
     energyMap = None
     
     
@@ -15,7 +14,6 @@ class SeamCarver:
         self.m_data = mpli.imread(imagePath)
         self.row = len(self.m_data)
         self.col = len(self.m_data[0])
-        
     
     
     # returns energy of specified pixel
@@ -47,6 +45,31 @@ class SeamCarver:
     def rgb2gray(self, x, y):
         return 0.2989 * (int)(self.m_data[y][x][0]) + 0.5870 * (int)(self.m_data[y][x][1]) + 0.1140 * (int)(self.m_data[y][x][2])
         
+#        z = self.energy(117, 721)
+#        a = int((float(z)/625.0)*255.0)
+#        print(a)
+
+        for x in range (0, self.row):
+            for i in range (0, self.col):
+                z = self.energy(i, x)
+                a = int((float(z)/625.0)*255.0)
+                #print("y:"+str(x)+", x:"+str(i)+", " + str(a))
+#                if a < 127:
+#                    a = 0
+#                else:
+#                    a = 255
+                b = np.array([a, a, a], dtype=np.uint8)
+                self.m_data[x][i] = b
+#                self.m_data[x][i][0] = a
+#                self.m_data[x][i][1] = a
+#                self.m_data[x][i][2] = a
+
+
+    # returns energy of specified pixel
+    def energy(self, x, y):
+        # TODO: edge cases
+        return math.sqrt(self._gradientSquareX(x, y) + self._gradientSquareY(x, y))
+    
     def _gradientSquareX(self, x, y):
         # Rx(x, y), Gx(x, y), and Bx(x, y) are the absolute value in differences
         # of red, green, and blue components between pixel (x + 1, y) and pixel (x − 1, y)
@@ -221,13 +244,21 @@ class SeamCarver:
 
     
 #    # seam is a 2D array
-#    def removeVertical(self, seam):
-#        # TODO
+#    def removeVertical(self):
+#        seam = self.verticalSeam()
+#        for i in range (0, self.row):
+#            self.m_data.pop(i) #[i][seam[i]][0]
+#            self.m_data.pop(i) #[i][seam[i]][1]
+#            self.m_data.pop(i) #[i][seam[i]][2]
 #        
 #    # seam is a 2D array
-#    def removeHorizontal(self, seam):
-#        # TODO
-#
+#    def removeHorizontal(self):
+#        seam = self.horizontalSeam()
+#        for i in range (0, self.col):
+#            del self.m_data[seam[i]][i][0]
+#            del self.m_data[seam[i]][i][1]
+#            del self.m_data[seam[i]][i][2]
+
 #    # removes seams corresponding to the difference in dimensions
 #    def scaleDown(self, newLength, newWidth):
 #        # TODO
@@ -243,9 +274,9 @@ class SeamCarver:
             self.markHorizontalSeam()
 
 
-s = SeamCarver("images/example_1.jpg")
+s = SeamCarver("images/example_3.jpg")
 #print("2, 2: " + s.m_data[2][2])#e_test = s.energy(0,1)
-#e_test = s.energy(1,1)
+#e_test = s.energy(121,728)
 #print(e_test)
 #s.markVerticalSeam()
 #s.removeVSeam()
@@ -253,4 +284,6 @@ s = SeamCarver("images/example_1.jpg")
 #s.markHorizontalSeam()
 #s.markAllSeams(968, 800)
 mpli.imsave("test.jpg", s.removeVSeam())
+#mpli.imsave("test.jpg", s.m_data)
+#print(s.m_data)
 #mpli.imsave("test.jpg", s.m_data)

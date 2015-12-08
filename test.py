@@ -11,4 +11,5 @@ for x in image:
         i[1] = 0 # g
         i[2] = 100 # b
 
+
 mpli.imsave("test.jpg", image)
