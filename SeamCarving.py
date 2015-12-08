@@ -49,26 +49,21 @@ class SeamCarver:
 #        a = int((float(z)/625.0)*255.0)
 #        print(a)
 
-        for x in range (0, self.row):
-            for i in range (0, self.col):
-                z = self.energy(i, x)
-                a = int((float(z)/625.0)*255.0)
-                #print("y:"+str(x)+", x:"+str(i)+", " + str(a))
-#                if a < 127:
-#                    a = 0
-#                else:
-#                    a = 255
-                b = np.array([a, a, a], dtype=np.uint8)
-                self.m_data[x][i] = b
-#                self.m_data[x][i][0] = a
-#                self.m_data[x][i][1] = a
-#                self.m_data[x][i][2] = a
+#        for x in range (0, self.row):
+#            for i in range (0, self.col):
+#                z = self.energy(i, x)
+#                a = int((float(z)/625.0)*255.0)
+#                #print("y:"+str(x)+", x:"+str(i)+", " + str(a))
+##                if a < 127:
+##                    a = 0
+##                else:
+##                    a = 255
+#                b = np.array([a, a, a], dtype=np.uint8)
+#                self.m_data[x][i] = b
+##                self.m_data[x][i][0] = a
+##                self.m_data[x][i][1] = a
+##                self.m_data[x][i][2] = a
 
-
-    # returns energy of specified pixel
-    def energy(self, x, y):
-        # TODO: edge cases
-        return math.sqrt(self._gradientSquareX(x, y) + self._gradientSquareY(x, y))
     
     def _gradientSquareX(self, x, y):
         # Rx(x, y), Gx(x, y), and Bx(x, y) are the absolute value in differences
