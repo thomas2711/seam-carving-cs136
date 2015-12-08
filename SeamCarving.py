@@ -9,31 +9,64 @@ class SeamCarver:
     row = 0 #y
     col = 0 #x
     energyMap = None
+    abcd = None
     
     
     def __init__(self, imagePath):
         self.m_data = mpli.imread(imagePath)
         self.row = len(self.m_data)
         self.col = len(self.m_data[0])
-        
+    
+        #self.abcd = self.toGrayscale()
+        #self.abcd = self.generateEnergyMap(self.toGrayscale())
+        self.abcd = self.generateEnergyMap()
+    
         #t = np.array(dtype=np.float32)
     
-        for x in range (0, self.row):
-            for i in range (0, self.col):
-                z = self.energy(i, x)
-                a = int((float(z)/625.0)*255.0)
-                if a < 127:
-                    a = np.uint8(0)
-                else:
-                    a = np.uint8(255)
-                b = np.array([a, a, a], dtype=np.uint8)
-                self.m_data[x][i] = b
-                self.m_data[x][i][0] = a
-                self.m_data[x][i][1] = a
-                self.m_data[x][i][2] = a
-    
+#        for x in range (0, self.row):
+#            for i in range (0, self.col):
+#                z = self.energy(i, x)
+#                a = int((float(z)/625.0)*255.0)
+#                if a < 127:
+#                    a = np.uint8(0)
+#                else:
+#                    a = np.uint8(255)
+#                b = np.array([a, a, a], dtype=np.uint8)
+#                self.m_data[x][i] = b
+#                self.m_data[x][i][0] = a
+#                self.m_data[x][i][1] = a
+#                self.m_data[x][i][2] = a
+
     def toGrayscale(self):
-        print("")
+        z = np.zeros((self.row, self.col, 3), dtype=np.uint8) #[[[0 for i in range(self.row)] for i in range(self.col)] for i in range(3)]
+        for x in range (0, self.col): #x
+            for y in range (0, self.row): #y
+                g_rgb = 0.2989 * (int)(self.m_data[y][x][0]) + 0.5870 * (int)(self.m_data[y][x][1]) + 0.1140 * (int)(self.m_data[y][x][2])
+                z[y][x][0] = g_rgb
+                z[y][x][1] = g_rgb
+                z[y][x][2] = g_rgb
+        return z
+    
+#    def generateEnergyMap(self, a):
+#        z = np.zeros((self.row, self.col, 3), dtype=np.uint8) #[[[0 for i in range(self.row)] for i in range(self.col)] for i in range(3)]
+#        for x in range (0, self.col): #x
+#            for y in range (0, self.row): #y
+#                pixel_energy = np.sqrt((a[x-1][y][0] - a[(x+1)%self.col][y][0])**2 + (a[x][y-1][0] - a[x][(y+1)%self.row])**2)
+#                z[y][x][0] = pixel_energy[0]
+#                z[y][x][1] = pixel_energy[0]
+#                z[y][x][2] = pixel_energy[0]
+#        return z
+
+    def generateEnergyMap(self):
+        z = np.zeros((self.row, self.col, 3), dtype=np.uint8) #[[[0 for i in range(self.row)] for i in range(self.col)] for i in range(3)]
+        for x in range (0, self.col): #x
+            for y in range (0, self.row): #y
+                pixel_energy = np.uint8(self.energy(x, y))
+                z[y][x][0] = pixel_energy
+                z[y][x][1] = pixel_energy
+                z[y][x][2] = pixel_energy
+        return z
+
 
     # returns energy of specified pixel
     def energy(self, x, y):

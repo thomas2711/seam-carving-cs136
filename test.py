@@ -3,7 +3,7 @@ from SeamCarving import *
 print("this is a test!")
 
 s = SeamCarver("images/example_1.jpg")
-mpli.imsave("test.jpg", s.m_data)
+mpli.imsave("test.jpg", s.abcd)
 
 #image = mpli.imread("images/example_1.jpg")
 #
