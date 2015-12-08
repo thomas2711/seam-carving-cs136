@@ -117,7 +117,7 @@ class SeamCarver:
             self.m_data[i][seam[i]][2] = 0
 
     def markHorizontalSeam(self):
-        seam = self.horizontalSeam()
+        seam = self.findHSeam()
         for i in range (0, self.col):
             self.m_data[seam[i]][i][0] = 255
             self.m_data[seam[i]][i][1] = 0
@@ -165,49 +165,56 @@ class SeamCarver:
             vertical.append(index_min)
 
         return vertical
+    
+    def transposeEMap(self):
+        transposed = []
+        self.generateEMap()
+        for i in range (0, self.col):
+            transposed.append([])
+            for j in range (0, self.row):
+                transposed[i].append(self.energyMap[j][i])
+
+        return transposed
 
 
     # still need work... column extraction??
     def findHSeam(self):
-        self.generateEMap()
-        M = list(self.energyMap)
+        M = list(self.transposeEMap())
         # 0th row remains the same
-        for col in range (1, self.col):
-            M[0][col] += min(M[0][col - 1], M[1][col - 1])
-            for row in range (1, self.row - 1):
-                M[row][col] += min(M[row - 1][col - 1], M[row][col - 1], M[row + 1][col - 1])
-            M[-1][col] += min(M[-1][col - 1], M[-2][col - 1])
-        
-        
-  #      index_min = M[-1].index(min(M[-1]))
-   #     vertical = []
-    #    vertical.append(index_min)
-     #   for row in range (self.row - 2, -1, -1):
-      #      if index_min == 0:
-       #         if M[row][index_min] > M[row][index_min + 1]:
-        #            index_min = index_min + 1
-         #   elif index_min == self.col - 1:
+
+        for row in range (1, self.col):
+            M[row][0] += min(M[row - 1][0], M[row - 1][1])
+            for col in range (1, self.row - 1):
+                M[row][col] += min(M[row - 1][col - 1], M[row - 1][col], M[row - 1][col + 1])
+            M[row][-1] += min(M[row - 1][-1], M[row - 1][-2])
+        index_min = M[-1].index(min(M[-1]))
+        vertical = []
+        vertical.append(index_min)
+        for row in range (self.col - 2, -1, -1):
+            if index_min == 0:
+                if M[row][index_min] > M[row][index_min + 1]:
+                    index_min = index_min + 1
+            elif index_min == self.row - 1:
                 if M[row][index_min] > M[row][index_min - 1]:
-       #             index_min = index_min - 1
-        #    else:
-         #       if M[row][index_min] > M[row][index_min - 1]:
-          #          if M[row][index_min - 1] > M[row][index_min + 1]:
-           #             index_min = index_min + 1
-            #        else:
-             #           index_min = index_min - 1
-              #  else:
-               #     if M[row][index_min] > M[row][index_min + 1]:
-                #        index_min = index_min + 1
-           # vertical.append(index_min)
+                    index_min = index_min - 1
+            else:
+                if M[row][index_min] > M[row][index_min - 1]:
+                    if M[row][index_min - 1] > M[row][index_min + 1]:
+                        index_min = index_min + 1
+                    else:
+                        index_min = index_min - 1
+                else:
+                    if M[row][index_min] > M[row][index_min + 1]:
+                        index_min = index_min + 1
+            vertical.append(index_min)
 
-     #   return vertical
-
+        return vertical
 
     # returns new image
-
+    
     def removeVSeam(self):
         seam = self.findVSeam()
-        new_data = []
+        new_data = np.
         for row in range (0, self.row):
             new_data.append([])
             deleted = seam.pop()
@@ -248,9 +255,10 @@ s = SeamCarver("images/example_1.jpg")
 #e_test = s.energy(1,1)
 #print(e_test)
 #s.markVerticalSeam()
+s.markHorizontalSeam()
 #s.removeVSeam()
 
 #s.markHorizontalSeam()
 #s.markAllSeams(968, 800)
-mpli.imsave("test.jpg", s.removeVSeam())
-#mpli.imsave("test.jpg", s.m_data)
+#mpli.imsave("test.jpg", s.removeVSeam())
+mpli.imsave("test.jpg", s.m_data)
