@@ -6,8 +6,8 @@ import numpy as np
 class SeamCarver:
     # an RGB 2d array
     m_data = None
-    row = 0
-    col = 0
+    row = 0 #y
+    col = 0 #x
     energyMap = None
     
     
@@ -32,7 +32,9 @@ class SeamCarver:
                 self.m_data[x][i][1] = a
                 self.m_data[x][i][2] = a
     
-    
+    def toGrayscale(self):
+        print("")
+
     # returns energy of specified pixel
     def energy(self, x, y):
         # TODO: edge cases
@@ -256,7 +258,7 @@ class SeamCarver:
     
     def removeVSeam(self):
         seam = self.findVSeam()
-        new_data = np.
+        #new_data = np.
         for row in range (0, self.row):
             new_data.append([])
             deleted = seam.pop()
