@@ -19,7 +19,7 @@ class SeamCarver:
     
         #self.abcd = self.toGrayscale()
         #self.abcd = self.generateEnergyMap(self.toGrayscale())
-        self.abcd = self.generateEnergyMap()
+        #self.abcd = self.generateEnergyMap()
     
         #t = np.array(dtype=np.float32)
     
@@ -291,14 +291,18 @@ class SeamCarver:
     
     def removeVSeam(self):
         seam = self.findVSeam()
-        #new_data = np.
+        new_data = np.ndarray((self.row, self.col - 1, 3), np.uint8)
         for row in range (0, self.row):
-            new_data.append([])
             deleted = seam.pop()
             for i in range (0, deleted):
-                new_data[row].append(self.m_data[row][i])
+                new_data[row][i][0] = self.m_data[row][i][0]
+                new_data[row][i][1] = self.m_data[row][i][1]
+                new_data[row][i][2] = self.m_data[row][i][2]
             for i in range (deleted + 1, self.col):
-                new_data[row].append(self.m_data[row][i])
+                new_data[row][i - 1][0] = self.m_data[row][i][0]
+                new_data[row][i - 1][1] = self.m_data[row][i][1]
+                new_data[row][i - 1][2] = self.m_data[row][i][2]
+    
             #self.m_data[row] = self.m_data[row][:(seam[-1 - row])].extend(self.m_data[row][(seam[-1 - row]) + 1:])
     
         return new_data
@@ -325,3 +329,4 @@ class SeamCarver:
 
         for i in range (0, numHoriSeams):
             self.markHorizontalSeam()
+
