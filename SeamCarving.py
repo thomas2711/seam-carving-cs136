@@ -14,6 +14,22 @@ class SeamCarver:
         self.m_data = mpli.imread(imagePath)
         self.row = len(self.m_data)
         self.col = len(self.m_data[0])
+        
+        #t = np.array(dtype=np.float32)
+    
+        for x in range (0, self.row):
+            for i in range (0, self.col):
+                z = self.energy(i, x)
+                a = int((float(z)/625.0)*255.0)
+                if a < 127:
+                    a = np.uint8(0)
+                else:
+                    a = np.uint8(255)
+                b = np.array([a, a, a], dtype=np.uint8)
+                self.m_data[x][i] = b
+                self.m_data[x][i][0] = a
+                self.m_data[x][i][1] = a
+                self.m_data[x][i][2] = a
     
     
     # returns energy of specified pixel
@@ -205,7 +221,7 @@ class SeamCarver:
        #         if M[row][index_min] > M[row][index_min + 1]:
         #            index_min = index_min + 1
          #   elif index_min == self.col - 1:
-                if M[row][index_min] > M[row][index_min - 1]:
+#if M[row][index_min] > M[row][index_min - 1]:
        #             index_min = index_min - 1
         #    else:
          #       if M[row][index_min] > M[row][index_min - 1]:
@@ -269,7 +285,7 @@ class SeamCarver:
             self.markHorizontalSeam()
 
 
-s = SeamCarver("images/example_3.jpg")
+#s = SeamCarver("images/example_3.jpg")
 #print("2, 2: " + s.m_data[2][2])#e_test = s.energy(0,1)
 #e_test = s.energy(121,728)
 #print(e_test)
@@ -278,7 +294,7 @@ s = SeamCarver("images/example_3.jpg")
 
 #s.markHorizontalSeam()
 #s.markAllSeams(968, 800)
-mpli.imsave("test.jpg", s.removeVSeam())
+#mpli.imsave("test.jpg", s.removeVSeam())
 #mpli.imsave("test.jpg", s.m_data)
 #print(s.m_data)
 #mpli.imsave("test.jpg", s.m_data)
