@@ -174,8 +174,9 @@ class SeamCarver:
                 new_data[row][i - 1][0] = self.m_data[row][i][0]
                 new_data[row][i - 1][1] = self.m_data[row][i][1]
                 new_data[row][i - 1][2] = self.m_data[row][i][2]
-
-        return new_data
+        self.m_data = new_data
+        self.col -= 1
+        #return new_data
         
     def removeHSeam(self):
         seam = self.findHSeam()
@@ -190,15 +191,14 @@ class SeamCarver:
                 new_data[i - 1][col][0] = self.m_data[i][col][0]
                 new_data[i - 1][col][1] = self.m_data[i][col][1]
                 new_data[i - 1][col][2] = self.m_data[i][col][2]
-    
-        return new_data
+        self.m_data = new_data
+        self.row -= 1
+        # return new_data
 
     def addVSeam(self):
         seam = self.findVSeam()
         new_data = np.ndarray((self.row, self.col + 1, 3), np.uint8)
 
-        
-        #new_data = np.ndarray((self.row, self.col + 1, 3), np.uint8)
         for row in range (0, self.row):
             added = seam.pop()
             for i in range (0, added + 1):
@@ -211,4 +211,25 @@ class SeamCarver:
                 new_data[row][i + 1][1] = self.m_data[row][i][1]
                 new_data[row][i + 1][2] = self.m_data[row][i][2]
 
-        return new_data
+        self.m_data = new_data
+        self.col += 1
+        #return new_data
+
+    def addHSeam(self):
+        seam = self.findHSeam()
+        new_data = np.ndarray((self.row + 1, self.col, 3), np.uint8)
+            
+        for col in range (0, self.col):
+            added = seam.pop()
+            for i in range (0, added + 1):
+                new_data[i][col][0] = self.m_data[i][col][0]
+                new_data[i][col][1] = self.m_data[i][col][1]
+                new_data[i][col][2] = self.m_data[i][col][2]
+            
+            for i in range (added, self.row):
+                new_data[i + 1][col][0] = self.m_data[i][col][0]
+                new_data[i + 1][col][1] = self.m_data[i][col][1]
+                new_data[i + 1][col][2] = self.m_data[i][col][2]
+    
+        self.m_data = new_data
+        self.row += 1
