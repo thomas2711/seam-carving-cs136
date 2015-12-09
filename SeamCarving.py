@@ -1,5 +1,5 @@
 import matplotlib.image as mpli
-import math
+from math import sqrt
 import numpy as np
 
 
@@ -45,7 +45,7 @@ class SeamCarver:
 
     # returns energy of specified pixel
     def energy(self, x, y):
-        return math.sqrt((self.rgb2gray(x - 1, y) - self.rgb2gray((x + 1) % self.col, y))**2 + (self.rgb2gray(x, y - 1) - self.rgb2gray(x, (y + 1) % self.row))**2)
+        return sqrt((self.rgb2gray(x - 1, y) - self.rgb2gray((x + 1) % self.col, y))**2 + (self.rgb2gray(x, y - 1) - self.rgb2gray(x, (y + 1) % self.row))**2)
     
     # sets energyMap to a two dimensional array of energy values
     def generateEMap(self):
