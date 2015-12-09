@@ -22,6 +22,9 @@ class SeamCarver:
         #self.abcd = self.generateEnergyMap(self.toGrayscale())
         #self.abcd = self.generateEnergyMap()
 
+    def saveImageAs(self, filename = "image.png"):
+        mpli.imsave(full_path, self.m_data)
+
     def toGrayscale(self):
         z = np.zeros((self.row, self.col, 3), dtype=np.uint8) #[[[0 for i in range(self.row)] for i in range(self.col)] for i in range(3)]
         for x in range (0, self.col): #x
