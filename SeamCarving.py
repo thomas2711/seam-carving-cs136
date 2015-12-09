@@ -1,6 +1,7 @@
 import matplotlib.image as mpli
 from math import sqrt
 import numpy as np
+from sys import maxsize
 
 
 class SeamCarver:
@@ -10,6 +11,8 @@ class SeamCarver:
     col = 0 #x
     energyMap = None
     abcd = None
+    excluded_pixels_conserved = True
+    x1, y1, x2, y2 = 0, 0, 0, 0
     
     def __init__(self, imagePath):
         self.m_data = mpli.imread(imagePath)
@@ -17,7 +20,7 @@ class SeamCarver:
         self.col = len(self.m_data[0])
 
     def saveImageAs(self, filename = "image.png"):
-        mpli.imsave(full_path, self.m_data)
+        mpli.imsave(filename, self.m_data)
 
     # returns a grayscale image using the Matlab grayscale formula
     def toGrayscale(self):
@@ -43,6 +46,22 @@ class SeamCarver:
                 z[y][x][2] = pixel_energy
         return z
 
+    def adjustEnergy(self):
+        for i in range(self.x1, self.x2):
+            for z in range(self.y1, self.y2):
+                if self.excluded_pixels_conserved:
+                    self.energyMap[z][i] = maxsize
+                else:
+                    self.energyMap[z][i] = -maxsize - 1
+        self.x2 -= 1
+
+    def excludePixels(self, x1, y1, x2, y2, conserve = False):
+        self.excluded_pixels_conserved = conserve
+        self.x1 = x1
+        self.x2 = x2
+        self.y1 = y1
+        self.y2 = y2
+
     # returns energy of specified pixel
     def energy(self, x, y):
         return sqrt((self.rgb2gray(x - 1, y) - self.rgb2gray((x + 1) % self.col, y))**2 + (self.rgb2gray(x, y - 1) - self.rgb2gray(x, (y + 1) % self.row))**2)
@@ -54,6 +73,7 @@ class SeamCarver:
             self.energyMap.append([])
             for j in range (0, self.col):
                 self.energyMap[i].append(self.energy(j, i))
+        self.adjustEnergy()
 
     # Matlab formula
     def rgb2gray(self, x, y):

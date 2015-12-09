@@ -2,8 +2,12 @@ from SeamCarving import *
 
 print("this is a test!")
 
-s = SeamCarver("images/example_1.jpg")
-mpli.imsave("test.png", s.generateEnergyMap())
+s = SeamCarver("images/example_2.jpg")
+#s.adjustEnergy(17, 135, 32, 159)
+s.excludePixels(17, 135, 32, 159, False)
+for i in range(0, 20):
+    s.removeVSeam()
+s.saveImageAs()
 
 #image = mpli.imread("images/example_1.jpg")
 #
