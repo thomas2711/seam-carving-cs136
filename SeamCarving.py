@@ -11,22 +11,17 @@ class SeamCarver:
     energyMap = None
     abcd = None
     
-    
     def __init__(self, imagePath):
         self.m_data = mpli.imread(imagePath)
         self.row = len(self.m_data)
         self.col = len(self.m_data[0])
-        #generateEMap()
-    
-        #self.abcd = self.toGrayscale()
-        #self.abcd = self.generateEnergyMap(self.toGrayscale())
-        #self.abcd = self.generateEnergyMap()
 
     def saveImageAs(self, filename = "image.png"):
         mpli.imsave(full_path, self.m_data)
 
+    # returns a grayscale image using the Matlab grayscale formula
     def toGrayscale(self):
-        z = np.zeros((self.row, self.col, 3), dtype=np.uint8) #[[[0 for i in range(self.row)] for i in range(self.col)] for i in range(3)]
+        z = np.zeros((self.row, self.col, 3), dtype=np.uint8)
         for x in range (0, self.col): #x
             for y in range (0, self.row): #y
                 g_rgb = 0.2989 * (float)(self.m_data[y][x][0]) + 0.5870 * (float)(self.m_data[y][x][1]) + 0.1140 * (float)(self.m_data[y][x][2])
@@ -35,21 +30,24 @@ class SeamCarver:
                 z[y][x][2] = g_rgb
         return z
 
+    # returns a visual energy map; the lighter a pixel is, the higher energy it is
     def generateEnergyMap(self):
-        z = np.zeros((self.row, self.col, 3), dtype=np.uint8) #[[[0 for i in range(self.row)] for i in range(self.col)] for i in range(3)]
+        if self.energyMap == None:
+            self.generateEMap()
+        z = np.zeros((self.row, self.col, 3), dtype=np.uint8)
         for x in range (0, self.col): #x
             for y in range (0, self.row): #y
-                pixel_energy = np.uint8(self.energy(x, y))
+                pixel_energy = np.uint8(self.energyMap[y][x])
                 z[y][x][0] = pixel_energy
                 z[y][x][1] = pixel_energy
                 z[y][x][2] = pixel_energy
         return z
 
-
     # returns energy of specified pixel
     def energy(self, x, y):
         return math.sqrt((self.rgb2gray(x - 1, y) - self.rgb2gray((x + 1) % self.col, y))**2 + (self.rgb2gray(x, y - 1) - self.rgb2gray(x, (y + 1) % self.row))**2)
     
+    # sets energyMap to a two dimensional array of energy values
     def generateEMap(self):
         self.energyMap = []
         for i in range (0, self.row):
@@ -61,7 +59,7 @@ class SeamCarver:
     def rgb2gray(self, x, y):
         return 0.2989 * (int)(self.m_data[y][x][0]) + 0.5870 * (int)(self.m_data[y][x][1]) + 0.1140 * (int)(self.m_data[y][x][2])
     
-    
+    # Marks the lowest energy vertical seam in red
     def markVerticalSeam(self):
         seam = self.findVSeam()
         for i in range (0, self.row):
@@ -69,6 +67,7 @@ class SeamCarver:
             self.m_data[i][seam[i]][1] = 0
             self.m_data[i][seam[i]][2] = 0
 
+    # Marks the lowest energy horizontal seam in red
     def markHorizontalSeam(self):
         seam = self.findHSeam()
         for i in range (0, self.col):
@@ -76,17 +75,8 @@ class SeamCarver:
             self.m_data[seam[i]][i][1] = 0
             self.m_data[seam[i]][i][2] = 0
 
-    # scoring matrix M
-   
-    def scoringHorizontal(self):
-        # 0th col remains the same
-        for col in range (1, self.col):
-            M[0][col] += min(M[0][col - 1], M[1][col - 1])
-            for row in range (1, self.row - 1):
-                M[row][col] += min(M[row - 1][col - 1], M[row][col - 1], M[row + 1][col - 1])
-            M[-1][col] += min(M[-1][col - 1], M[-2][col - 1])
-
-    # find minimum vertical energy seam. returns col indices in reverse row order (from bottom to top)
+    # find minimum vertical energy seam using [algorithm]
+    # returns col indices in reverse row order (from bottom to top)
     def findVSeam(self):
         self.generateEMap()
         M = list(self.energyMap)
@@ -119,6 +109,8 @@ class SeamCarver:
 
         return vertical
     
+    # returns the energy map with the 'x' and 'y' axis of the two dimensional array switched
+    # facilitates the finding of horizontal seams
     def transposeEMap(self):
         transposed = []
         self.generateEMap()
@@ -129,8 +121,7 @@ class SeamCarver:
 
         return transposed
 
-
-    # still need work... column extraction??
+    # finds and returns lowest energy horizontal seam using [algorithm]
     def findHSeam(self):
         M = list(self.transposeEMap())
         # 0th row remains the same
@@ -161,9 +152,8 @@ class SeamCarver:
             vertical.append(index_min)
 
         return vertical
-
-    # returns new image
     
+    # removes vertical seams from m_data by removing the pixels that compose the lowest energy seam
     def removeVSeam(self):
         seam = self.findVSeam()
         new_data = np.ndarray((self.row, self.col - 1, 3), np.uint8)
@@ -179,8 +169,8 @@ class SeamCarver:
                 new_data[row][i - 1][2] = self.m_data[row][i][2]
         self.m_data = new_data
         self.col -= 1
-        #return new_data
-        
+    
+    # removes horizontal seams from m_data by removing the pixels that compose the lowest energy seam
     def removeHSeam(self):
         seam = self.findHSeam()
         new_data = np.ndarray((self.row - 1, self.col, 3), np.uint8)
@@ -196,8 +186,9 @@ class SeamCarver:
                 new_data[i - 1][col][2] = self.m_data[i][col][2]
         self.m_data = new_data
         self.row -= 1
-        # return new_data
 
+    # adds vertical seams from m_data by duplicating the pixels that compose the lowest energy seam
+    # and placing them adjacent to the seam
     def addVSeam(self):
         seam = self.findVSeam()
         new_data = np.ndarray((self.row, self.col + 1, 3), np.uint8)
@@ -216,8 +207,9 @@ class SeamCarver:
 
         self.m_data = new_data
         self.col += 1
-        #return new_data
-
+    
+    # adds horizontal seams from m_data by duplicating the pixels that compose the lowest energy seam
+    # and placing them adjacent to the seam
     def addHSeam(self):
         seam = self.findHSeam()
         new_data = np.ndarray((self.row + 1, self.col, 3), np.uint8)

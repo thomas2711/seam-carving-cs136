@@ -3,7 +3,7 @@ from SeamCarving import *
 print("this is a test!")
 
 s = SeamCarver("images/example_1.jpg")
-mpli.imsave("test.png", s.m_data)
+mpli.imsave("test.png", s.generateEnergyMap())
 
 #image = mpli.imread("images/example_1.jpg")
 #
