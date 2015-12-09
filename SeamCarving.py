@@ -16,12 +16,12 @@ class SeamCarver:
         self.m_data = mpli.imread(imagePath)
         self.row = len(self.m_data)
         self.col = len(self.m_data[0])
-    #generateEMap()
+        #generateEMap()
     
-    #self.abcd = self.toGrayscale()
-    #self.abcd = self.generateEnergyMap(self.toGrayscale())
-    #self.abcd = self.generateEnergyMap()
-    
+        #self.abcd = self.toGrayscale()
+        #self.abcd = self.generateEnergyMap(self.toGrayscale())
+        #self.abcd = self.generateEnergyMap()
+
     def toGrayscale(self):
         z = np.zeros((self.row, self.col, 3), dtype=np.uint8) #[[[0 for i in range(self.row)] for i in range(self.col)] for i in range(3)]
         for x in range (0, self.col): #x
@@ -31,7 +31,7 @@ class SeamCarver:
                 z[y][x][1] = g_rgb
                 z[y][x][2] = g_rgb
         return z
-    
+
     def generateEnergyMap(self):
         z = np.zeros((self.row, self.col, 3), dtype=np.uint8) #[[[0 for i in range(self.row)] for i in range(self.col)] for i in range(3)]
         for x in range (0, self.col): #x
@@ -41,8 +41,8 @@ class SeamCarver:
                 z[y][x][1] = pixel_energy
                 z[y][x][2] = pixel_energy
         return z
-    
-    
+
+
     # returns energy of specified pixel
     def energy(self, x, y):
         return math.sqrt((self.rgb2gray(x - 1, y) - self.rgb2gray((x + 1) % self.col, y))**2 + (self.rgb2gray(x, y - 1) - self.rgb2gray(x, (y + 1) % self.row))**2)
@@ -54,9 +54,9 @@ class SeamCarver:
             for j in range (0, self.col):
                 self.energyMap[i].append(self.energy(j, i))
 
-# Matlab formula
-def rgb2gray(self, x, y):
-    return 0.2989 * (int)(self.m_data[y][x][0]) + 0.5870 * (int)(self.m_data[y][x][1]) + 0.1140 * (int)(self.m_data[y][x][2])
+    # Matlab formula
+    def rgb2gray(self, x, y):
+        return 0.2989 * (int)(self.m_data[y][x][0]) + 0.5870 * (int)(self.m_data[y][x][1]) + 0.1140 * (int)(self.m_data[y][x][2])
     
     
     def markVerticalSeam(self):
@@ -66,26 +66,26 @@ def rgb2gray(self, x, y):
             self.m_data[i][seam[i]][1] = 0
             self.m_data[i][seam[i]][2] = 0
 
-def markHorizontalSeam(self):
-    seam = self.findHSeam()
+    def markHorizontalSeam(self):
+        seam = self.findHSeam()
         for i in range (0, self.col):
             self.m_data[seam[i]][i][0] = 255
             self.m_data[seam[i]][i][1] = 0
             self.m_data[seam[i]][i][2] = 0
-                
-                # scoring matrix M
-                
-                def scoringHorizontal(self):
-                    # 0th col remains the same
-for col in range (1, self.col):
-    M[0][col] += min(M[0][col - 1], M[1][col - 1])
-        for row in range (1, self.row - 1):
-            M[row][col] += min(M[row - 1][col - 1], M[row][col - 1], M[row + 1][col - 1])
+
+    # scoring matrix M
+   
+    def scoringHorizontal(self):
+        # 0th col remains the same
+        for col in range (1, self.col):
+            M[0][col] += min(M[0][col - 1], M[1][col - 1])
+            for row in range (1, self.row - 1):
+                M[row][col] += min(M[row - 1][col - 1], M[row][col - 1], M[row + 1][col - 1])
             M[-1][col] += min(M[-1][col - 1], M[-2][col - 1])
 
-# find minimum vertical energy seam. returns col indices in reverse row order (from bottom to top)
-def findVSeam(self):
-    self.generateEMap()
+    # find minimum vertical energy seam. returns col indices in reverse row order (from bottom to top)
+    def findVSeam(self):
+        self.generateEMap()
         M = list(self.energyMap)
         # 0th row remains the same
         for row in range (1, self.row):
@@ -93,7 +93,7 @@ def findVSeam(self):
             for col in range (1, self.col - 1):
                 M[row][col] += min(M[row - 1][col - 1], M[row - 1][col], M[row - 1][col + 1])
             M[row][-1] += min(M[row - 1][-1], M[row - 1][-2])
-    index_min = M[-1].index(min(M[-1]))
+        index_min = M[-1].index(min(M[-1]))
         vertical = []
         vertical.append(index_min)
         for row in range (self.row - 2, -1, -1):
@@ -114,7 +114,7 @@ def findVSeam(self):
                         index_min = index_min + 1
             vertical.append(index_min)
 
-return vertical
+        return vertical
     
     def transposeEMap(self):
         transposed = []
@@ -124,19 +124,19 @@ return vertical
             for j in range (0, self.row):
                 transposed[i].append(self.energyMap[j][i])
 
-    return transposed
+        return transposed
 
 
-# still need work... column extraction??
-def findHSeam(self):
-    M = list(self.transposeEMap())
+    # still need work... column extraction??
+    def findHSeam(self):
+        M = list(self.transposeEMap())
         # 0th row remains the same
         for row in range (1, self.col):
             M[row][0] += min(M[row - 1][0], M[row - 1][1])
             for col in range (1, self.row - 1):
                 M[row][col] += min(M[row - 1][col - 1], M[row - 1][col], M[row - 1][col + 1])
             M[row][-1] += min(M[row - 1][-1], M[row - 1][-2])
-    index_min = M[-1].index(min(M[-1]))
+        index_min = M[-1].index(min(M[-1]))
         vertical = []
         vertical.append(index_min)
         for row in range (self.col - 2, -1, -1):
@@ -157,8 +157,8 @@ def findHSeam(self):
                         index_min = index_min + 1
             vertical.append(index_min)
 
-return vertical
-    
+        return vertical
+
     # returns new image
     
     def removeVSeam(self):
@@ -175,10 +175,10 @@ return vertical
                 new_data[row][i - 1][1] = self.m_data[row][i][1]
                 new_data[row][i - 1][2] = self.m_data[row][i][2]
 
-    return new_data
-
-def removeHSeam(self):
-    seam = self.findHSeam()
+        return new_data
+        
+    def removeHSeam(self):
+        seam = self.findHSeam()
         new_data = np.ndarray((self.row - 1, self.col, 3), np.uint8)
         for col in range (0, self.col):
             deleted = seam.pop()
@@ -191,12 +191,12 @@ def removeHSeam(self):
                 new_data[i - 1][col][1] = self.m_data[i][col][1]
                 new_data[i - 1][col][2] = self.m_data[i][col][2]
     
-    return new_data
+        return new_data
 
-def addVSeam(self):
-    seam = self.findVSeam()
+    def addVSeam(self):
+        seam = self.findVSeam()
         new_data = np.ndarray((self.row, self.col + 1, 3), np.uint8)
-        
+
         
         #new_data = np.ndarray((self.row, self.col + 1, 3), np.uint8)
         for row in range (0, self.row):
@@ -211,4 +211,4 @@ def addVSeam(self):
                 new_data[row][i + 1][1] = self.m_data[row][i][1]
                 new_data[row][i + 1][2] = self.m_data[row][i][2]
 
-    return new_data
+        return new_data
