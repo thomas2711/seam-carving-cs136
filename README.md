@@ -11,3 +11,5 @@ It relies on the following libraries:
   * math
   * numpy
   * matplotlib
+
+Use the methods removeObject() and resize() in SeamCarving.py to process an image.
