@@ -248,3 +248,37 @@ class SeamCarver:
     
         self.m_data = new_data
         self.row += 1
+
+# uses seam carving to remove an object within a pixel range from an image
+def removeObject(imagePath, x1, y1, x2, y2, newImagePath = "removed.png"):
+    s = SeamCarver(imagePath)
+    s.excludePixels(x1, y1, x2, y2, False)
+    deltax = abs(x2-x1)
+    deltay = abs(y2-y1)
+
+    if deltax > deltay: #remove horizontal seams
+        for i in range(0, deltay):
+            s.removeHSeam()
+    else:
+        for i in range(0, deltax):
+            s.removeVSeam()
+    s.saveImageAs(newImagePath)
+
+# uses seam carving to adjust an image to a specifed size
+def resize(imagePath, newHeight, newWidth, newImagePath = "resized.png"):
+    
+    s = SeamCarver(imagePath)
+    removeHSeams = True
+    removeVSeams = True
+    if newHeight > s.row: removeHSeams = False
+    if newWidth > s.col: removeVSeams = False
+    
+    for i in range (0, abs(newHeight - s.row)):
+        if removeHSeams: s.removeHSeam()
+        else: s.addHSeam()
+        mpli.imsave(newImagePath, s.m_data)
+    
+    for i in range (0, abs(newWidth - s.col)):
+        if removeVSeams: s.removeVSeam()
+        else: s.addVSeam()
+        mpli.imsave(newImagePath, s.m_data)
