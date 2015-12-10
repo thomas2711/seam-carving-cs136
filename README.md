@@ -1,6 +1,6 @@
 # seam-carving-cs136
 Williams College, CS136, Prof. Morgan McGuire <br>
-Final Project, Implementing the Seam Carving Algorithm <br>
+Final Project, implementing the seam carving algorithm <br>
 Thomas Edward Ragucci, ter1@williams.edu <br>
 Zhiqi Li, zl2@williams.edu <br>
 Mentor: Jamie Lesser, jrl4@williams.edu <br>
