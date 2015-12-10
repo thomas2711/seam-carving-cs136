@@ -207,48 +207,6 @@ class SeamCarver:
         self.m_data = new_data
         self.row -= 1
 
-    # adds vertical seams from m_data by duplicating the pixels that compose the lowest energy seam
-    # and placing them adjacent to the seam
-    def addVSeam(self):
-        seam = self.findVSeam()
-        new_data = np.ndarray((self.row, self.col + 1, 3), np.uint8)
-
-        for row in range (0, self.row):
-            added = seam.pop()
-            for i in range (0, added + 1):
-                new_data[row][i][0] = self.m_data[row][i][0]
-                new_data[row][i][1] = self.m_data[row][i][1]
-                new_data[row][i][2] = self.m_data[row][i][2]
-            
-            for i in range (added, self.col):
-                new_data[row][i + 1][0] = self.m_data[row][i][0]
-                new_data[row][i + 1][1] = self.m_data[row][i][1]
-                new_data[row][i + 1][2] = self.m_data[row][i][2]
-
-        self.m_data = new_data
-        self.col += 1
-    
-    # adds horizontal seams from m_data by duplicating the pixels that compose the lowest energy seam
-    # and placing them adjacent to the seam
-    def addHSeam(self):
-        seam = self.findHSeam()
-        new_data = np.ndarray((self.row + 1, self.col, 3), np.uint8)
-            
-        for col in range (0, self.col):
-            added = seam.pop()
-            for i in range (0, added + 1):
-                new_data[i][col][0] = self.m_data[i][col][0]
-                new_data[i][col][1] = self.m_data[i][col][1]
-                new_data[i][col][2] = self.m_data[i][col][2]
-            
-            for i in range (added, self.row):
-                new_data[i + 1][col][0] = self.m_data[i][col][0]
-                new_data[i + 1][col][1] = self.m_data[i][col][1]
-                new_data[i + 1][col][2] = self.m_data[i][col][2]
-    
-        self.m_data = new_data
-        self.row += 1
-
 # uses seam carving to remove an object within a pixel range from an image
 def removeObject(imagePath, x1, y1, x2, y2, newImagePath = "removed.png"):
     s = SeamCarver(imagePath)
@@ -268,17 +226,10 @@ def removeObject(imagePath, x1, y1, x2, y2, newImagePath = "removed.png"):
 def resize(imagePath, newHeight, newWidth, newImagePath = "resized.png"):
     
     s = SeamCarver(imagePath)
-    removeHSeams = True
-    removeVSeams = True
-    if newHeight > s.row: removeHSeams = False
-    if newWidth > s.col: removeVSeams = False
     
-    for i in range (0, abs(newHeight - s.row)):
-        if removeHSeams: s.removeHSeam()
-        else: s.addHSeam()
-        mpli.imsave(newImagePath, s.m_data)
+    for i in range (0, s.row - newHeight):
+        s.removeHSeam()
     
-    for i in range (0, abs(newWidth - s.col)):
-        if removeVSeams: s.removeVSeam()
-        else: s.addVSeam()
-        mpli.imsave(newImagePath, s.m_data)
+    for i in range (0, s.col - newWidth):
+        s.removeVSeam()
+    self.saveImageAs(newImagePath)
