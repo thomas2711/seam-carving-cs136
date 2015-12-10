@@ -5,7 +5,7 @@ Thomas Edward Ragucci, ter1@williams.edu <br>
 Zhiqi Li, zl2@williams.edu <br>
 Mentor: Jamie Lesser, jrl4@williams.edu <br>
 
-This is a Python3 implemenation of the seam carving algorithm (https://en.wikipedia.org/wiki/Seam_carving).
+This is a Python3 implementation of the seam carving algorithm (https://en.wikipedia.org/wiki/Seam_carving).
 
 It relies on the following libraries:
   * math
